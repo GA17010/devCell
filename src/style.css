@@ -1,0 +1,56 @@
+:root {
+  --font-family: Inter, system-ui, Avenir, Helvetica, sans-serif;
+
+  /* --font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; */
+  /* color #0077B6 */
+  --color-primary: #023E8A;
+  --color-secondary: #0096c7;
+  --color-tertiary: #00b4d8;
+  --color-text: #000000;
+  /* rgb(243, 242, 242); */
+  /* rgb(202, 237, 253); */
+  --color-background: #caf0f8;
+  --color-accent: #0077B6;
+  --color-navbar: #0096c7;
+  --color-hover: #48CAE4;
+  /* tamano */
+  --navbar-height: 3.5rem;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  /* background: url('./assets/bgIMG.png') center center / cover no-repeat fixed; */
+  width: 100vw;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #ffffff;
+    background-color: var(--color-background);
+    font-family: var(--font-family);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #ffffff;
+    background-color: var(--color-background);
+    /* scrollbar-width: thin; */
+    scrollbar-color: var(--color-tertiary) var(--color-background);
+  }
+}
+
+
+/* paleta de color azul */
+/* #03045e */
+/* #023E8A */
+/* #0077B6 */
+/* #0096c7 */
+/* #00b4d8 */
+/* #48CAE4 */
+/* #90e0ef */
+/* #ade8f4 */
+/* #caf0f8 */
+/* #f0f0f0 */
