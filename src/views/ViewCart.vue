@@ -128,9 +128,13 @@ export default {
     // Calculate the total of the cart
     calculateTotalCart() {
       this.totalCart = this.myCart.reduce(
-        (acc, product) => acc + Number(product.price),
+        (acc, product) => acc + Number(this.removeComa(product.price)),
         0
       );
+
+      // Add the coma to the price
+      this.totalCart =  this.totalCart.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
     },
     // Go to the checkout page
     goToCheckout() {
@@ -139,6 +143,10 @@ export default {
       toast.error("The checkout is not implemented yet");
 
       // this.$router.push({ name: "Checkout" });
+    },
+    // Function to remove coma from the price
+    removeComa(price) {
+      return price.replace(",", "");
     },
   },
 };
