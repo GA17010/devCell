@@ -464,28 +464,13 @@ const store = createStore({
     // Listen for changes in the articles
     listenForArticleChanges({ dispatch, commit }) {
       let ifChange = false;
-      let countChanges = 0;
       onSnapshot(collection(db, "articulos"), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          
-          if (change.type === "added") {
-            countChanges++;
-            ifChange = true;
-          }
-          if (change.type === "modified") {
-            countChanges++;
-            ifChange = true;
-          }
-          if (change.type === "removed") {
-            countChanges++;
-            ifChange = true;
-          }
-
+          ifChange = true;
         });
         
         if (ifChange) {
           dispatch("fetchArticles");
-          countChanges = 0;
           ifChange = false;
         }
       });
