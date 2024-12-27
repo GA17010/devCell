@@ -12,7 +12,7 @@
             </v-col>
           </v-row>
           <v-row v-else-if="myPost && myPost.length" no-gutters>
-            <CardsArticle :myPost="myPost" />
+            <CardsArticle :myPost="myPost" :key="myPost.length"/>
           </v-row>
           <!-- else if -->
           <v-row v-else no-gutters>
@@ -39,18 +39,14 @@ export default {
   },
   data() {
     return {
-      articles: null,
       loadingPosts: true,
+      myPost: [],
     };
   },
   computed: {
-    ...mapGetters(["getUser", "getArticles"]),
+    ...mapGetters(["getUser"]),
     user() {
       return this.getUser;
-    },
-    myPost() {
-      if (!this.articles || !this.user) return [];
-      return this.articles.filter((article) => article.uid === this.user.uid);
     },
   },
   watch: {
@@ -59,18 +55,22 @@ export default {
         this.$router.push("/login");
       }
     },
-    getArticles: {
+    "$store.state.articles": {
       immediate: true,
-      handler() {
-        this.articles = this.getArticles;
-        if(this.articles.length) {
-          this.loadingPosts = false;
-        }
+      handler(newArticles) {
+        // this.articles = newArticles;
+
+        if (!newArticles || !this.user) return [];
+        // Update my posts
+        this.myPost = newArticles.filter((article) => article.uid === this.user.uid);
+
+        // Set loading state
+        this.loadingPosts = !newArticles.length;
       },
     },
   },
   beforeCreate() {
-    this.$store.dispatch("fetchUser"); // Check if user is logged in
+    this.$store.dispatch("fetchUser");
   },
   methods: {
     createPost() {

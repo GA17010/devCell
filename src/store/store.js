@@ -464,28 +464,18 @@ const store = createStore({
     // Listen for changes in the articles
     listenForArticleChanges({ dispatch, commit }) {
       let ifChange = false;
-      let countChanges = 0;
       onSnapshot(collection(db, "articulos"), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
+          ifChange = true;
           
-          if (change.type === "added") {
-            countChanges++;
-            ifChange = true;
-          }
-          if (change.type === "modified") {
-            countChanges++;
-            ifChange = true;
-          }
+          // If an article is removed from the store, update the cart
           if (change.type === "removed") {
-            countChanges++;
-            ifChange = true;
+            dispatch("updateCart", change.doc.id);
           }
-
         });
         
         if (ifChange) {
           dispatch("fetchArticles");
-          countChanges = 0;
           ifChange = false;
         }
       });
@@ -547,7 +537,13 @@ const store = createStore({
           toast.error("Error deleting article");
           throw error;
         });
-    }
+    },
+    // Update Cart, if the article is removed from the store
+    updateCart({ commit, state }, id) {
+      const cart = state.cart.filter((article) => article.id !== id);
+      commit("setCart", cart);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    },
   },
 });
 

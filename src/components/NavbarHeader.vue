@@ -113,6 +113,7 @@
                 ></path>
               </svg>
               <v-badge
+                v-if="cart.length > 0"
                 color="info"
                 :content="cart.length"
                 class="pb-5"

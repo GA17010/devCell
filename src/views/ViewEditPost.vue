@@ -729,8 +729,26 @@ export default {
         filteredValue = filteredValue.slice(0, 8);
       }
 
-      // Add commas to the number
-      filteredValue = filteredValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      // Add a decimal point if there are more than two digits
+      if (filteredValue.length > 2) {
+        const integerPart = filteredValue.slice(0, -2); // All but the last two digits
+        const decimalPart = filteredValue.slice(-2); // The last two digits
+
+        // Format the integer part with commas
+        const formattedInteger = integerPart.replace(
+          /\B(?=(\d{3})+(?!\d))/g,
+          ","
+        );
+
+        // Join the integer part with the decimal part
+        filteredValue = `${formattedInteger}.${decimalPart}`;
+      } else if (filteredValue.length === 2) {
+        // If there are two digits, show as "0.XX"
+        filteredValue = `0.${filteredValue}`;
+      } else if (filteredValue.length === 1) {
+        // If there is one digit, show as "0.0X"
+        filteredValue = `0.0${filteredValue}`;
+      }
 
       this.createArticle.price = filteredValue;
     },

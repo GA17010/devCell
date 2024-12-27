@@ -12,7 +12,8 @@
           <div class="container--post-product-b ViewForm__content">
             <v-form ref="form" v-model="isFormValid">
               <p class="text-small-emphasis">
-                {{ $t("viewPostProduct.photos") }} · {{ photos.urls.length }}/8 - {{ $t("viewPostProduct.canAddMaxPhotos") }}
+                {{ $t("viewPostProduct.photos") }} · {{ photos.urls.length }}/8
+                - {{ $t("viewPostProduct.canAddMaxPhotos") }}
               </p>
               <!-- Add photos or drag and drop -->
               <div v-if="photos.urls == 0" class="pb-5 px-1">
@@ -61,12 +62,14 @@
                     </div>
                   </label>
                   <span
-                    :class="!photoRequired ? 'photo-not-required' : 'photo-required'"
+                    :class="
+                      !photoRequired ? 'photo-not-required' : 'photo-required'
+                    "
                   >
-                    {{ $t('viewPostProduct.requiredAtLeastOnePhoto') }}
+                    {{ $t("viewPostProduct.requiredAtLeastOnePhoto") }}
                   </span>
                   <div v-if="isDragOver" class="drop-area-text">
-                    {{ $t('viewPostProduct.dropFilesHere') }}
+                    {{ $t("viewPostProduct.dropFilesHere") }}
                   </div>
                 </div>
               </div>
@@ -110,7 +113,7 @@
                             d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"
                           ></path>
                         </svg>
-                        <p>{{ $t('viewPostProduct.addPhotos') }}</p>
+                        <p>{{ $t("viewPostProduct.addPhotos") }}</p>
                       </div>
                       <v-file-input
                         ref="urlsRef"
@@ -132,7 +135,7 @@
                   </div>
                 </v-row>
                 <div v-if="isDragOver" class="drop-area-text">
-                  {{ $t('viewPostProduct.dropFilesHere') }}
+                  {{ $t("viewPostProduct.dropFilesHere") }}
                 </div>
               </div>
 
@@ -219,7 +222,7 @@
           </div>
           <div class="container--post-product-c container-button-postproduct">
             <v-btn :loading="loading" color="primary" @click="submitForm">
-              {{ $t('viewPostProduct.postProduct') }}
+              {{ $t("viewPostProduct.postProduct") }}
             </v-btn>
           </div>
         </div>
@@ -563,16 +566,34 @@ export default {
     filterInput(event) {
       let value = event.target.value;
       let filteredValue = value
-        .replace(/[^0-9]/g, "") // Permitir solo números y puntos
-        .replace(/^0+(?!\.|$)/, ""); // Eliminar ceros a la izquierda
+        .replace(/[^0-9]/g, "") // Allow only numbers
+        .replace(/^0+(?!\.|$)/, ""); // Remove leading zeros
 
-      // Limitar el número total de dígitos a 8
+      // Limit the number of digits to 8
       if (filteredValue.length > 8) {
         filteredValue = filteredValue.slice(0, 8);
       }
 
-      // agregar comas como separadores de miles
-      filteredValue = filteredValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      // Add a decimal point if there are more than two digits
+      if (filteredValue.length > 2) {
+        const integerPart = filteredValue.slice(0, -2); // All but the last two digits
+        const decimalPart = filteredValue.slice(-2); // The last two digits
+
+        // Format the integer part with commas
+        const formattedInteger = integerPart.replace(
+          /\B(?=(\d{3})+(?!\d))/g,
+          ","
+        );
+
+        // Join the integer part with the decimal part
+        filteredValue = `${formattedInteger}.${decimalPart}`;
+      } else if (filteredValue.length === 2) {
+        // If there are two digits, show as "0.XX"
+        filteredValue = `0.${filteredValue}`;
+      } else if (filteredValue.length === 1) {
+        // If there is one digit, show as "0.0X"
+        filteredValue = `0.0${filteredValue}`;
+      }
 
       this.createArticle.price = filteredValue;
     },
@@ -637,8 +658,6 @@ export default {
   top: 0;
   height: 100%;
   width: 100%;
-  /* min-height: calc(100vh - var(--navbar-height)); */
-  /* overflow-y: auto; */
 }
 
 .fixed-col {
@@ -646,7 +665,6 @@ export default {
   top: 0;
   margin: 0;
   height: 100%;
-  /* min-height: calc(100vh - var(--navbar-height)); */
 }
 .container--post-product-a {
   display: flex;
@@ -684,9 +702,7 @@ export default {
     padding: 0.5rem;
     margin-bottom: 0.5rem;
 
-    height: calc(
-      80vh - 8vh
-    );
+    height: calc(80vh - 8vh);
     overflow-y: scroll;
 
     scrollbar-width: thin;
